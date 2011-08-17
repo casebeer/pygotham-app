@@ -20,6 +20,7 @@
 	});
 
 	TalkPanel = Ext.extend(Ext.Panel, {
+		layout: 'fit', 
 		tpl: new Ext.XTemplate(
 			'<tpl for=".">',
 			'<div class="talk-display">',
@@ -50,7 +51,10 @@
 							ui: 'back',
 							listeners: {
 								tap: function () {
-									PyGotham.viewport.setActiveItem(PyGotham.viewport.query('#alltalks')[0]);
+									PyGotham.viewport.setActiveItem(
+										PyGotham.viewport.query('#alltalks')[0],
+										{ type: 'slide', reverse: 'true' }
+									);
 								}
 							}
 						}
@@ -65,6 +69,7 @@
 	Ext.reg('talkpanel', TalkPanel);
 
 	TalkListPanel = Ext.extend(Ext.Panel, {
+		layout: 'fit', 
 		initComponent: function () {
 			this.dockedItems = [
 				{
@@ -99,9 +104,10 @@
 	Ext.reg('talklistpanel', TalkListPanel);
 
 	Viewport = Ext.extend(Ext.Panel, {
+		itemId: 'viewport', 
 		fullscreen: true,
 		layout: 'card', 
-		itemId: 'viewport', 
+		cardSwitchAnimation: 'slide',
 		initComponent: function () {
 			this.items = [
 				{
@@ -116,9 +122,7 @@
 
 	Ext.regApplication('PyGotham', {
 		launch: function() {
-			this.viewport = new Viewport({
-				fullscreen: true
-			});
+			this.viewport = new Viewport();
 		}
 	});
 })();
