@@ -1,0 +1,9 @@
+CACHE MANIFEST
+# REVTOKEN
+
+NETWORK:
+data/*
+*
+
+CACHE:
+
