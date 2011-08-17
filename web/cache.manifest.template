@@ -6,4 +6,10 @@ data/*
 *
 
 CACHE:
+index.html
+js/sencha.js
+js/overrides.js
+js/pygotham.js
+css/sencha-touch.css
+#images/favicon.ico
 
