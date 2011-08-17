@@ -6,6 +6,7 @@ web/cache.manifest: web/cache.manifest.template force-run
 	sed -e 's/REVTOKEN/'"$$(date)"'/' web/cache.manifest.template > $@
 
 web/data/talks.json: force-run
+	mkdir -p $$(dirname $@)
 	curl http://pygotham.org/talkvote/scheduled_talks/ \
 		| python data/convert.py \
 		> $@
