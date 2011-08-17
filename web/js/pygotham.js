@@ -92,6 +92,16 @@
 							window.setTimeout(function () { list.deselect(index); }, 50);
 						}
 					},
+					plugins: [
+						new Ext.plugins.PullRefreshPlugin({
+							refreshFn: function (callback, plugin) {
+								console.log(plugin);
+								// manually implement the refresh/complete calls for later override
+								plugin.list.getStore().load();
+								plugin.onLoadComplete.call(plugin);
+							}
+						})
+					],
 					store: new Ext.data.Store({
 						model: 'Talk',
 						autoLoad: true
