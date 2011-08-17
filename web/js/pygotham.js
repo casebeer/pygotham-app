@@ -60,6 +60,12 @@
 								// todo: store in localstorage
 								me.lastLoaded = new Date();
 							} else {
+								me.localStore.load({
+									callback: function (records, operation, success) {
+										me.remove(me.getRange());
+										me.insert(0, records);
+									}
+								});
 								me.fresh = false;
 							}
 						}
