@@ -25,23 +25,42 @@
 			RelayStore.superclass.constructor.apply(this, arguments);
 			this.on({
 				beforeload: function () {
+					var me = this;
 					// load data from ajax, if possible, first
 					console.log('Attempting to load data from Ajax');
 					if (!this.ajaxStore) {
 						this.ajaxStore = new Ext.data.Store({ model: this.model });
 					}
 
+					if (!this.localStore) { 
+						this.localStore = new Ext.data.Store({
+							model: this.model,
+							proxy: {
+								type: 'localstorage', 
+								id: 'PyGotham-talkcache'
+							}
+						});
+					}
+
 					this.ajaxStore.load({
 						callback: function (records, operation, success) {
 							console.log('Back from Ajax call, success: ' + success);
 							if (success) {
-								this.remove(this.getRange());
-								this.loadRecords(records);
-								this.fresh = true;
+								me.localStore.remove(me.localStore.getRange());
+								me.localStore.sync();
+								me.localStore.insert(0, records);
+								me.localStore.sync();
+
+								me.remove(me.getRange());
+								me.insert(0, records);
+
+								console.log('Synchronized store to LocalStorage');
+								console.log(me);
+								me.fresh = true;
 								// todo: store in localstorage
-								this.lastLoaded = new Date();
+								me.lastLoaded = new Date();
 							} else {
-								this.fresh = false;
+								me.fresh = false;
 							}
 						}
 					});
@@ -49,8 +68,7 @@
 			});
 		},
 		proxy: {
-			type: 'localstorage', 
-			id: 'talkcache'
+			type: 'memory'
 		}
 	});
 
