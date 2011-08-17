@@ -80,6 +80,7 @@
 
 	TalkPanel = Ext.extend(Ext.Panel, {
 		layout: 'fit', 
+		scroll: 'vertical',
 		tpl: new Ext.XTemplate(
 			'<tpl for=".">',
 			'<div class="talk-display">',
