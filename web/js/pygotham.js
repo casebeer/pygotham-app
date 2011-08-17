@@ -81,6 +81,9 @@
 	TalkPanel = Ext.extend(Ext.Panel, {
 		layout: 'fit', 
 		scroll: 'vertical',
+		style: {
+			background: '#ffffff'
+		},
 		tpl: new Ext.XTemplate(
 			'<tpl for=".">',
 			'<div class="talk-display">',
@@ -130,6 +133,9 @@
 
 	TalkListPanel = Ext.extend(Ext.Panel, {
 		layout: 'fit', 
+		style: {
+			background: '#ffffff'
+		},
 		initComponent: function () {
 			this.dockedItems = [
 				{
