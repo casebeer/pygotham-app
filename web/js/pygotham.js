@@ -5,7 +5,8 @@
 	'use strict';
 	var Viewport, 
 		TalkListPanel,
-		TalkPanel;
+		TalkPanel, 
+		RelayStore;
 
 	Ext.regModel('Talk', {
 		fields: [
@@ -16,6 +17,40 @@
 		proxy: {
 			type: 'ajax', 
 			url: 'data/talks.json'
+		}
+	});
+
+	RelayStore = Ext.extend(Ext.data.Store, {
+		constructor: function () {
+			RelayStore.superclass.constructor.apply(this, arguments);
+			this.on({
+				beforeload: function () {
+					// load data from ajax, if possible, first
+					console.log('Attempting to load data from Ajax');
+					if (!this.ajaxStore) {
+						this.ajaxStore = new Ext.data.Store({ model: this.model });
+					}
+
+					this.ajaxStore.load({
+						callback: function (records, operation, success) {
+							console.log('Back from Ajax call, success: ' + success);
+							if (success) {
+								this.remove(this.getRange());
+								this.loadRecords(records);
+								this.fresh = true;
+								// todo: store in localstorage
+								this.lastLoaded = new Date();
+							} else {
+								this.fresh = false;
+							}
+						}
+					});
+				}
+			});
+		},
+		proxy: {
+			type: 'localstorage', 
+			id: 'talkcache'
 		}
 	});
 
@@ -102,7 +137,7 @@
 							}
 						})
 					],
-					store: new Ext.data.Store({
+					store: new RelayStore({
 						model: 'Talk',
 						autoLoad: true
 					})
