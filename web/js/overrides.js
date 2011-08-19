@@ -14,16 +14,16 @@ Ext.override(Ext.data.Store, {
     onProxyLoad: function(operation) {
         var records = operation.getRecords();
         
-		if (operation.wasSuccessful()) {
-			this.loadRecords(records, operation.addRecords);
-		}
+        if (operation.wasSuccessful()) {
+            this.loadRecords(records, operation.addRecords);
+        }
         this.loading = false;
         this.fireEvent('load', this, records, operation.wasSuccessful());
         
         //TODO: deprecate this event, it should always have been 'load' instead. 'load' is now documented, 'read' is not.
         //People are definitely using this so can't deprecate safely until 2.x
         this.fireEvent('read', this, records, operation.wasSuccessful());
-
+        
         //this is a callback that would have been passed to the 'read' function and is optional
         var callback = operation.callback;
         
