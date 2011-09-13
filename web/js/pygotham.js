@@ -276,6 +276,15 @@
 			this.items = [
 				this.contentPanel,
 				{ xtype: 'spacer' },
+				{
+					html: '<p>App by <a href="http://chc.name/" ' +
+							'target="_blank">Christopher Casebeer</a>. ' +
+							'Source code ' +
+							'<a href="https://github.com/casebeer/pygotham-app" ' +
+							'target="_blank">available on Github</a>.' +
+							'</p><p>&nbsp;</p>'
+							
+				},
 				{ 
 					xtype: 'button', 
 					text: 'Reset', 
