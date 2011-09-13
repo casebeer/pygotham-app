@@ -218,29 +218,9 @@
 		listeners: {
 			deactivate: function () {
 				this.destroy();
+				console.log('Destroyed info panel.');
 			}
 		},
-		dockedItems: [
-			{ 
-				xtype: 'toolbar',
-				title: 'PyGotham',
-				items: [
-						{ 
-							text: 'Back', 
-							itemId: 'back', 
-							ui: 'back',
-							listeners: {
-								tap: function () {
-									PyGotham.viewport.setActiveItem(
-										PyGotham.viewport.query('#alltalks')[0],
-										{ type: 'slide', reverse: 'true' }
-									);
-								}
-							}
-						}
-				]
-			}
-		],
 		tpl: new Ext.XTemplate(
 			'<dl>',
 			'<dt>Version</dt>',
@@ -248,7 +228,31 @@
 			'</dl>',
 			{
 			}
-		)
+		),
+		initComponent: function () {
+			this.dockedItems = [
+				{ 
+					xtype: 'toolbar',
+					title: 'PyGotham',
+					items: [
+							{ 
+								text: 'Back', 
+								itemId: 'back', 
+								ui: 'back',
+								listeners: {
+									tap: function () {
+										PyGotham.viewport.setActiveItem(
+											PyGotham.viewport.query('#alltalks')[0],
+											{ type: 'slide', reverse: 'true' }
+										);
+									}
+								}
+							}
+					]
+				}
+			];
+			InfoPanel.superclass.initComponent.call(this);
+		}
 	});
 	Ext.reg('infopanel', InfoPanel);
 
