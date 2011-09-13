@@ -92,9 +92,7 @@
 			{ name: 'talktype', type: 'string' }
 		],
 		proxy: {
-			type: 'ajax', 
-			url: 'data/schedule.json'
-			//url: 'http://pygotham.org/talkvote/full_schedule'
+			type: 'memory'
 		}
 	});
 
@@ -106,9 +104,8 @@
 					var me = this;
 					// load data from ajax, if possible, first
 					console.log('Attempting to load data from Ajax');
-					if (!this.ajaxStore) {
-						this.ajaxStore = new Ext.data.Store({ model: this.model });
-					}
+
+					console.log(this.ajaxStore);
 
 					if (!this.localStore) { 
 						this.localStore = new Ext.data.Store({
@@ -124,33 +121,44 @@
 						callback: function (records, operation, success) {
 							console.log('Back from Ajax call, success: ' + success);
 							if (success) {
-								me.localStore.remove(me.localStore.getRange());
-								me.localStore.sync();
-								me.localStore.insert(0, records);
-								me.localStore.sync();
+								window.setTimeout(function () {
+									me.localStore.remove(me.localStore.getRange());
+									me.localStore.sync();
+									me.localStore.insert(0, records);
+									me.localStore.sync();
+									console.log('Synchronized store to LocalStorage');
+									console.log(me);
+								}, 500);
 
 								me.remove(me.getRange());
 								me.insert(0, records);
 
-								console.log('Synchronized store to LocalStorage');
-								console.log(me);
 								me.fresh = true;
 								// todo: store in localstorage
 								me.lastLoaded = new Date();
 							} else {
-								me.localStore.load({
-									callback: function (records, operation, success) {
-										me.remove(me.getRange());
-										me.sync();
-										me.insert(0, records);
-									}
-								});
+								if (me.getCount() == 0) {
+									console.log('No records in store, loading from localstorage');
+									me.localStore.load({
+										callback: function (records, operation, success) {
+											me.remove(me.getRange());
+											//me.sync();
+											me.insert(0, records);
+										}
+									});
+								}
 								me.fresh = false;
 							}
 						}
 					});
 				}
 			});
+			if (!this.ajaxStore) {
+				this.ajaxStore = new Ext.data.Store({ 
+					model: this.model,
+					proxy: this.ajaxProxy
+				});
+			}
 		},
 		proxy: {
 			type: 'memory'
@@ -348,6 +356,11 @@
 					grouped: true,
 					store: new RelayStore({
 						model: 'Talk',
+						ajaxProxy: {
+							type: 'ajax', 
+							url: 'data/schedule.json'
+							//url: 'http://pygotham.org/talkvote/full_schedule'
+						},
 						autoLoad: true, 
 						getGroupString: function (record) {
 							return format_date(record.get('start_time'));
