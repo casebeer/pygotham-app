@@ -265,6 +265,8 @@
 					'<dl>',
 					'<dt>Version</dt>',
 					'<dd>{VERSION}</dd>',
+					'<dt>Total Local Objects</dt>',
+					'<dd>{localStorageSize}</dd>',
 					'</dl>',
 					{
 					}
@@ -287,7 +289,8 @@
 			this.on({
 				render: function () {
 					this.contentPanel.update({
-						VERSION: window.VERSION
+						VERSION: window.VERSION,
+						localStorageSize: window.localStorage.length
 					});
 				}
 			});
