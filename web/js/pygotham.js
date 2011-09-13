@@ -1,3 +1,37 @@
+(function (){
+	// ISO8601 parser from http://dansnetwork.com/javascript-iso8601rfc3339-date-parser/
+	Date.prototype.setISO8601 = function (dString) {
+		var regexp = /(\d\d\d\d)(-)?(\d\d)(-)?(\d\d)(T)?(\d\d)(:)?(\d\d)(:)?(\d\d)(\.\d+)?(Z|([+-])(\d\d)(:)?(\d\d))/,
+			d,
+			offset;
+
+		if (dString.toString().match(new RegExp(regexp))) {
+			d = dString.match(new RegExp(regexp));
+			offset = 0;
+
+			this.setUTCDate(1);
+			this.setUTCFullYear(parseInt(d[1],10));
+			this.setUTCMonth(parseInt(d[3],10) - 1);
+			this.setUTCDate(parseInt(d[5],10));
+			this.setUTCHours(parseInt(d[7],10));
+			this.setUTCMinutes(parseInt(d[9],10));
+			this.setUTCSeconds(parseInt(d[11],10));
+			if (d[12]) {
+				this.setUTCMilliseconds(parseFloat(d[12]) * 1000);
+			} else {
+				this.setUTCMilliseconds(0);
+			}
+			if (d[13] != 'Z') {
+				offset = (d[15] * 60) + parseInt(d[17],10);
+				offset *= ((d[14] == '-') ? -1 : 1);
+				this.setTime(this.getTime() - offset * 60 * 1000);
+			}
+		} else {
+			this.setTime(Date.parse(dString));
+		}
+		return this;
+	};
+}());
 /*global Ext */
 /*global window */
 /*global console */
@@ -6,17 +40,55 @@
 	var Viewport, 
 		TalkListPanel,
 		TalkPanel, 
-		RelayStore;
+		RelayStore, 
+		format_date;
+	
+	format_date = function (d) {
+		var days = [ 'Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat' ],
+			day,
+			hours,
+			pm,
+			minutesString;
+
+		if (!d) {
+			return "";
+		}
+
+		day = days[d.getDay()];
+		hours = (d.getHours() < 1 || d.getHours() > 12) ?
+			d.getHours() % 12 || 12 :
+			d.getHours();
+		pm =  d.getHours() >= 12;
+		minutesString = (d.getMinutes() < 10 ? '0' : '') + String(d.getMinutes());
+		return day + ' ' + String(hours) + ':' + minutesString + (pm ? 'pm' : 'am');
+	}
 
 	Ext.regModel('Talk', {
 		fields: [
 			{ name: 'title', type: 'string' },
-			{ name: 'speaker', type: 'string' },
-			{ name: 'description', type: 'string' }
+			{ name: 'speaker', type: 'string', mapping: 'full_name' },
+			{ name: 'description', type: 'string', mapping: 'desc' },
+			{ name: 'outline', type: 'string' },
+			{ 
+				name: 'start_time', 
+				type: 'date', 
+				mapping: 'talk_day_time', 
+				convert: function (v) { var d = new Date(); return d.setISO8601(v); }
+			},
+			{ 
+				name: 'end_time', 
+				type: 'date', 
+				mapping: 'talk_end_time', 
+				convert: function (v) { var d = new Date(); return d.setISO8601(v); }
+			},
+			{ name: 'levels', type: 'array' },
+			{ name: 'room_number', type: 'string' },
+			{ name: 'talktype', type: 'string' }
 		],
 		proxy: {
 			type: 'ajax', 
-			url: 'data/talks.json'
+			url: 'data/schedule.json'
+			//url: 'http://pygotham.org/talkvote/full_schedule'
 		}
 	});
 
@@ -37,7 +109,7 @@
 							model: this.model,
 							proxy: {
 								type: 'localstorage', 
-								id: 'PyGotham-talkcache'
+								id: 'PyGotham-schedulecache'
 							}
 						});
 					}
@@ -88,12 +160,20 @@
 			'<tpl for=".">',
 			'<div class="talk-display">',
 			'<h2>{title}</h2>',
-			'{speaker}',
+			'<div class="speaker">{speaker}</div>',
+			'<div class="speaker">',
+			'{[ this.format_date(values.start_time)]}',
+			' · Room {room_number}',
+			' · {[ values.levels.join("&nbsp;/&nbsp;") ]}',
+			'</div>',
 			'<p>',
 			'{description}',
 			'</p>',
 			'</div>',
-			'</tpl>'
+			'</tpl>',
+			{
+				format_date: format_date
+			}
 		),
 		styleHtmlContent: true,
 		listeners: {
@@ -148,7 +228,12 @@
 					xtype: 'list', 
 					itemTpl: new Ext.XTemplate(
 						'<h4>{title}</h4>',
-						'{speaker}'
+						'<div class="speaker">{speaker} · {[ this.format_date(values.start_time) ]} · Room {room_number}</div>',
+						'</div>',
+						//'<div class="summary">{summary}</div>',
+						{
+							format_date: format_date
+						}
 					),
 					listeners: {
 						itemtap: function (list, index, item, evt) {
@@ -168,9 +253,13 @@
 							}
 						})
 					],
+					grouped: true,
 					store: new RelayStore({
 						model: 'Talk',
-						autoLoad: true
+						autoLoad: true, 
+						getGroupString: function (record) {
+							return format_date(record.get('start_time'));
+						}
 					})
 				}
 			];
