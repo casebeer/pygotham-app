@@ -122,6 +122,7 @@
 							console.log('Back from Ajax call, success: ' + success);
 							if (success) {
 								window.setTimeout(function () {
+									me.localStore.load();
 									me.localStore.remove(me.localStore.getRange());
 									me.localStore.sync();
 									me.localStore.insert(0, records);
