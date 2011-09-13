@@ -66,6 +66,7 @@
 
 	Ext.regModel('Talk', {
 		fields: [
+			{ name: 'id', type: 'int' },
 			{ name: 'title', type: 'string' },
 			{ name: 'full_name', type: 'string' },
 			{ name: 'speaker', type: 'string', mapping: 'full_name' },
@@ -140,6 +141,7 @@
 								me.localStore.load({
 									callback: function (records, operation, success) {
 										me.remove(me.getRange());
+										me.sync();
 										me.insert(0, records);
 									}
 								});
@@ -217,7 +219,10 @@
 	Ext.reg('talkpanel', TalkPanel);
 	
 	InfoPanel = Ext.extend(Ext.Panel, {
-		layout: 'fit', 
+		layout: {
+			type: 'vbox', 
+			align: 'stretch'
+		},
 		styleHtmlContent: true,
 		listeners: {
 			deactivate: function () {
@@ -225,14 +230,6 @@
 				console.log('Destroyed info panel.');
 			}
 		},
-		tpl: new Ext.XTemplate(
-			'<dl>',
-			'<dt>Version</dt>',
-			'<dd>{VERSION}</dd>',
-			'</dl>',
-			{
-			}
-		),
 		initComponent: function () {
 			this.dockedItems = [
 				{ 
@@ -255,6 +252,37 @@
 					]
 				}
 			];
+			this.contentPanel = new Ext.Panel({
+				tpl: new Ext.XTemplate(
+					'<dl>',
+					'<dt>Version</dt>',
+					'<dd>{VERSION}</dd>',
+					'</dl>',
+					{
+					}
+				)
+			});
+			this.items = [
+				this.contentPanel,
+				{ xtype: 'spacer' },
+				{ 
+					xtype: 'button', 
+					text: 'Reset', 
+					listeners: {
+						tap: function () {
+							window.localStorage.clear();
+							window.location = window.location;
+						}
+					}
+				}
+			];
+			this.on({
+				render: function () {
+					this.contentPanel.update({
+						VERSION: window.VERSION
+					});
+				}
+			});
 			InfoPanel.superclass.initComponent.call(this);
 		}
 	});
@@ -280,9 +308,6 @@
 							listeners: {
 								tap: function () {
 									var infoPanel = new InfoPanel();
-									infoPanel.update({
-										VERSION: window.VERSION
-									});
 									PyGotham.viewport.setActiveItem(infoPanel);
 								}
 							}
