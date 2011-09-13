@@ -26,7 +26,9 @@ web/data/talks.json: force-run
 
 clean:
 	find . -type f -name '*.pyc' | xargs rm -f
-	rm -f web/data/talks.json
+	rm -f web/data/talks.json web/data/schedule.json
 	rm -f web/cache.manifest
+	rm -f web/js/VERSION.js
 
 force-run: /dev/null
+
