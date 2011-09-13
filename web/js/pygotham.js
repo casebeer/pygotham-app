@@ -115,7 +115,7 @@
 							model: this.model,
 							proxy: {
 								type: 'localstorage', 
-								id: 'PyGotham-schedulecache'
+								id: 'PyGotham-schedule-cache'
 							}
 						});
 					}
