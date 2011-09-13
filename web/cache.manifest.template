@@ -6,6 +6,7 @@ index.html
 js/sencha.js
 js/overrides.js
 js/pygotham.js
+js/VERSION.js
 css/sencha-touch.css
 css/pygotham.css
 #images/favicon.ico
