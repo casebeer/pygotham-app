@@ -67,15 +67,19 @@
 	Ext.regModel('Talk', {
 		fields: [
 			{ name: 'title', type: 'string' },
+			{ name: 'full_name', type: 'string' },
 			{ name: 'speaker', type: 'string', mapping: 'full_name' },
+			{ name: 'desc', type: 'string' },
 			{ name: 'description', type: 'string', mapping: 'desc' },
 			{ name: 'outline', type: 'string' },
+			{ name: 'talk_day_time', type: 'string' }, 
 			{ 
 				name: 'start_time', 
 				type: 'date', 
 				mapping: 'talk_day_time', 
 				convert: function (v) { var d = new Date(); return d.setISO8601(v); }
 			},
+			{ name: 'talk_end_time', type: 'string' }, 
 			{ 
 				name: 'end_time', 
 				type: 'date', 
