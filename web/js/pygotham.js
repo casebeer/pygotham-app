@@ -41,6 +41,7 @@
 		TalkListPanel,
 		TalkPanel, 
 		RelayStore, 
+		InfoPanel,
 		format_date;
 	
 	format_date = function (d) {
@@ -210,6 +211,46 @@
 		} 
 	});
 	Ext.reg('talkpanel', TalkPanel);
+	
+	InfoPanel = Ext.extend(Ext.Panel, {
+		layout: 'fit', 
+		styleHtmlContent: true,
+		listeners: {
+			deactivate: function () {
+				this.destroy();
+			}
+		},
+		dockedItems: [
+			{ 
+				xtype: 'toolbar',
+				title: 'PyGotham',
+				items: [
+						{ 
+							text: 'Back', 
+							itemId: 'back', 
+							ui: 'back',
+							listeners: {
+								tap: function () {
+									PyGotham.viewport.setActiveItem(
+										PyGotham.viewport.query('#alltalks')[0],
+										{ type: 'slide', reverse: 'true' }
+									);
+								}
+							}
+						}
+				]
+			}
+		],
+		tpl: new Ext.XTemplate(
+			'<dl>',
+			'<dt>Version</dt>',
+			'<dd>{VERSION}</dd>',
+			'</dl>',
+			{
+			}
+		)
+	});
+	Ext.reg('infopanel', InfoPanel);
 
 	TalkListPanel = Ext.extend(Ext.Panel, {
 		layout: 'fit', 
@@ -220,7 +261,25 @@
 			this.dockedItems = [
 				{
 					xtype: 'toolbar', 
-					title: 'PyGotham'
+					title: 'PyGotham',
+					items: [
+						{ xtype: 'spacer' },
+						{ 
+							iconCls: 'info', 
+							iconMask: true, 
+							ui: 'round', 
+							itemId: 'about',
+							listeners: {
+								tap: function () {
+									var infoPanel = new InfoPanel();
+									infoPanel.update({
+										VERSION: window.VERSION
+									});
+									PyGotham.viewport.setActiveItem(infoPanel);
+								}
+							}
+						}
+					]
 				}
 			];
 			this.items = [
