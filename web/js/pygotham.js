@@ -180,7 +180,7 @@
 			'<div class="speaker">',
 			'{[ this.format_date(values.start_time)]}',
 			' · Room {room_number}',
-			' · {[ values.levels.join("&nbsp;/&nbsp;") ]}',
+			' · {[ (typeof values.levels === "string") ? values.levels : values.levels.join("&nbsp;/&nbsp;") ]}',
 			'</div>',
 			'<p>',
 			'{description}',
@@ -339,6 +339,7 @@
 			this.items = [
 				{
 					xtype: 'list', 
+					flex: 1,
 					itemTpl: new Ext.XTemplate(
 						'<h4>{title}</h4>',
 						'<div class="speaker">{speaker} · {[ this.format_date(values.start_time) ]} · Room {room_number}</div>',
@@ -370,9 +371,15 @@
 					store: new RelayStore({
 						model: 'Talk',
 						ajaxProxy: {
-							type: 'ajax', 
-							url: 'data/schedule.json'
-							//url: 'http://pygotham.org/talkvote/full_schedule'
+							type: 'scripttag', 
+							//url: 'data/schedule.json'
+							url: 'http://pipes.yahoo.com/pipes/pipe.run?u=https%3A%2F%2Fpygotham.org%2Ftalkvote%2Fjson_schedule&_id=332d9216d8910ba39e6c2577fd321a6a&_render=json',
+							callbackParam: '_callback',
+							timeout: 10000,
+							reader: {
+								type: 'json',
+								root: 'value.items[0].json'
+							}
 						},
 						autoLoad: true, 
 						getGroupString: function (record) {
