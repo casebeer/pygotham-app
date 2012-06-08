@@ -10,7 +10,7 @@ web/cache.manifest: web/cache.manifest.template force-run
 	sed -e 's/REVTOKEN/'"$$(date)"'/' web/cache.manifest.template > $@
 
 web/js/VERSION.js: web/js/VERSION.js.template force-run
-	sed -e 's/%%APP_VERSION%%/'"$$(git rev-parse HEAD) $$(date)"'/' web/js/VERSION.js.template > $@
+	sed -e 's/%%APP_VERSION%%/'"$$(git rev-parse --short HEAD) $$(date)"'/' web/js/VERSION.js.template > $@
 
 web/data/schedule.json: force-run
 	mkdir -p $$(dirname $@)
