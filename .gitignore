@@ -6,3 +6,4 @@ web/data/schedule.json
 web/js/VERSION.js
 web/cache.manifest
 web/index-android.html
+publish.sh
