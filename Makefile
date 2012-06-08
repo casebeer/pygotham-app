@@ -3,7 +3,11 @@ all: prod
 
 data: web/data/schedule.json
 
-prod: web/cache.manifest web/js/VERSION.js data
+prod: web/cache.manifest web/js/VERSION.js web/index-android.html data
+
+web/index-android.html: web/index.html force-run
+	sed -e 's|<!-- CORDOVA_JS -->|<script src="js/cordova-1.8.0rc1.js" type="text/javascript"></script><script src="js/cordova_init.js"></script>|' \
+		$< > $@
 
 web/cache.manifest: web/cache.manifest.template force-run
 	# forcing cache.manifest rebuild to add new revision token
