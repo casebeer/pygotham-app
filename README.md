@@ -1,6 +1,7 @@
 # PyGotham Talk List App
 
-View the live schedule app on your mobile device at [http://chc.name/pygotham/](pygAppProd).
+View the live schedule app on your mobile device at [http://chc.name/pygotham/](pygAppProd),
+or [install the Android app][AndroidApp] from the Google Play Shop. 
 
 Quick and dirty app to display the talk list for the [PyGotham][pygotham] conference. 
 
@@ -8,4 +9,5 @@ PyGotham is a non-profit Python conference in New York City, and will run from J
 
 [pygotham]: https://pygotham.org/
 [pygAppProd]: http://chc.name/pygotham/
+[AndroidApp]: https://play.google.com/store/apps/details?id=org.pygotham.app
 
