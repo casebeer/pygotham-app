@@ -9,8 +9,8 @@ js/pygotham.js
 js/VERSION.js
 css/sencha-touch.css
 css/pygotham.css
-#images/favicon.ico
-
+images/favicon.png
+images/apple-touch-icon-iphone.png
 
 NETWORK:
 data/*
