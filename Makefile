@@ -14,7 +14,7 @@ web/js/VERSION.js: web/js/VERSION.js.template force-run
 
 web/data/schedule.json: force-run
 	mkdir -p $$(dirname $@)
-	curl -H 'Accept: application/json' http://pygotham.org/talkvote/full_schedule \
+	curl -H 'Accept: application/json' https://pygotham.org/talkvote/full_schedule/ \
 		| sed -e 's/\(2011-09-[0-9][0-9]\) \([0-9][0-9]:[0-9][0-9]:[0-9][0-9]\)/\1T\2-04:00/g' \
 		> $@
 
