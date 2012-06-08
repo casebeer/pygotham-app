@@ -3,7 +3,11 @@ all: prod
 
 data: web/data/schedule.json
 
-prod: web/cache.manifest web/js/VERSION.js data
+prod: web/cache.manifest web/js/VERSION.js web/index-android.html data
+
+web/index-android.html: web/index.html force-run
+	sed -e 's|<!-- CORDOVA_JS -->|<script src="js/cordova-1.8.0rc1.js" type="text/javascript"></script><script src="js/cordova_init.js"></script>|' \
+		$< > $@
 
 web/cache.manifest: web/cache.manifest.template force-run
 	# forcing cache.manifest rebuild to add new revision token
@@ -24,11 +28,20 @@ web/data/talks.json: force-run
 		| python data/convert.py \
 		> $@
 
-clean:
+clean: android-clean
 	find . -type f -name '*.pyc' | xargs rm -f
 	rm -f web/data/talks.json web/data/schedule.json
 	rm -f web/cache.manifest
 	rm -f web/js/VERSION.js
+	rm -f web/index-android.html
+
+android-clean:
+	cd cordova/android ; make clean
 
 force-run: /dev/null
 
+android: prod force-run
+	cd cordova/android ; make
+
+android-install: prod force-run
+	cd cordova/android ; make install
