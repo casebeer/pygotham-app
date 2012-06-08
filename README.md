@@ -1,11 +1,11 @@
 # PyGotham Talk List App
 
-View the live schedule app on your mobile device at [http://pygotham.org/app/](pygAppProd).
+View the live schedule app on your mobile device at [http://chc.name/pygotham/](pygAppProd).
 
 Quick and dirty app to display the talk list for the [PyGotham][pygotham] conference. 
 
-PyGotham is a non-profit Python conference in New York City, and will run from September 16–17, 2011.
+PyGotham is a non-profit Python conference in New York City, and will run from June 8–9, 2012.
 
-[pygotham]: http://pygotham.org/
-[pygAppProd]: http://pygotham.org/app/
+[pygotham]: https://pygotham.org/
+[pygAppProd]: http://chc.name/pygotham/
 
