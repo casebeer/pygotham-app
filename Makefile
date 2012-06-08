@@ -28,11 +28,20 @@ web/data/talks.json: force-run
 		| python data/convert.py \
 		> $@
 
-clean:
+clean: android-clean
 	find . -type f -name '*.pyc' | xargs rm -f
 	rm -f web/data/talks.json web/data/schedule.json
 	rm -f web/cache.manifest
 	rm -f web/js/VERSION.js
+	rm -f web/index-android.html
+
+android-clean:
+	cd cordova/android ; make clean
 
 force-run: /dev/null
 
+android: prod force-run
+	cd cordova/android ; make
+
+android-install: prod force-run
+	cd cordova/android ; make install
