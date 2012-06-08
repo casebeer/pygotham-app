@@ -1,7 +1,7 @@
 (function (){
 	// ISO8601 parser from http://dansnetwork.com/javascript-iso8601rfc3339-date-parser/
 	Date.prototype.setISO8601 = function (dString) {
-		var regexp = /(\d\d\d\d)(-)?(\d\d)(-)?(\d\d)(T)?(\d\d)(:)?(\d\d)(:)?(\d\d)(\.\d+)?(Z|([+-])(\d\d)(:)?(\d\d))/,
+		var regexp = /(\d\d\d\d)(-)?(\d\d)(-)?(\d\d)(T| )(\d\d)(:)?(\d\d)(:)?(\d\d)(\.\d+)?(Z|([+-])(\d\d)(:)?(\d\d))/,
 			d,
 			offset;
 
@@ -78,14 +78,14 @@
 				name: 'start_time', 
 				type: 'date', 
 				mapping: 'talk_day_time', 
-				convert: function (v) { var d = new Date(); return d.setISO8601(v); }
+				convert: function (v) { var d = new Date(); return d.setISO8601(v + '-04:00'); }
 			},
 			{ name: 'talk_end_time', type: 'string' }, 
 			{ 
 				name: 'end_time', 
 				type: 'date', 
 				mapping: 'talk_end_time', 
-				convert: function (v) { var d = new Date(); return d.setISO8601(v); }
+				convert: function (v) { var d = new Date(); return d.setISO8601(v + '-04:00'); }
 			},
 			{ name: 'levels', type: 'array' },
 			{ name: 'room_number', type: 'string' },
